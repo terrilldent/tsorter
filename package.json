@@ -1,0 +1,16 @@
+{
+  "name": "tsorter",
+  "version": "1.0.0",
+  "description": "JavaScript HTML Table Sorter",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Terrill Dent",
+  "license": "Released under MIT license, http://terrill.ca/sorting/tsorter/LICENSE",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-jslint": "~1.1.1"
+  }
+}
