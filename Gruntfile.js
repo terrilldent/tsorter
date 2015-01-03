@@ -5,6 +5,7 @@ module.exports = function( grunt )
       bannerContent = 
         '/*!\n' + 
         ' * <%= pkg.name %> <%= pkg.version %> - Copyright <%= grunt.template.today("yyyy") %> Terrill Dent, http://terrill.ca\n' +
+        ' * <%= pkg.description %>\n' +
         ' * <%= pkg.license %>\n' +
         ' */\n',
 
@@ -38,8 +39,17 @@ module.exports = function( grunt )
         src: sourceDir + devJS,
         dest: distDir + minJS
       }
-    }
+    },
 
+    concat: {
+      options: {
+        banner: bannerContent
+      },
+      tsorter: {
+        src: sourceDir + devJS,
+        dest: distDir + devJS
+      },
+    },
   });
  
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -47,7 +57,7 @@ module.exports = function( grunt )
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-jslint');
 
-  grunt.registerTask('default', [ 'jslint:tsorter', 'uglify:tsorter' ] );
+  grunt.registerTask('default', [ 'jslint:tsorter', 'uglify:tsorter', 'concat:tsorter' ] );
 };
 
 

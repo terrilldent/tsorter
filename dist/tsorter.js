@@ -1,3 +1,8 @@
+/*!
+ * tsorter 2.0.0 - Copyright 2015 Terrill Dent, http://terrill.ca
+ * JavaScript HTML Table Sorter
+ * Released under MIT license, http://terrill.ca/sorting/tsorter/LICENSE
+ */
 var tsorter = (function()
 {
     'use strict';
