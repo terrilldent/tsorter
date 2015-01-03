@@ -11,8 +11,8 @@ module.exports = function( grunt )
       sourceDir = 'src/',
       distDir   = 'dist/',
 
-      devJS     = latest+'.js',
-      minJS     = latest+'.min.js';
+      devJS     = latest +'.js',
+      minJS     = latest +'.min.js';
        
        
   grunt.initConfig({
@@ -20,17 +20,22 @@ module.exports = function( grunt )
 
     jslint: {
       tsorter: {
+        directives: { 
+          browser: true,
+          white: true,
+          plusplus: true,
+          todo: true
+        },
         src: [ sourceDir + 'tsorter.js' ]
       }
     },
 
     uglify:{
       options : {
-        banner: bannerContent,
-        mangle: {}
+        banner: bannerContent
       },
       tsorter: {
-        src: distDir + devJS,
+        src: sourceDir + devJS,
         dest: distDir + minJS
       }
     }
