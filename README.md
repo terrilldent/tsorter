@@ -6,7 +6,7 @@ JavaScript Table Sorter using in-place QuickSort.
 Full Details: 
 [http://www.terrill.ca/sorting/](http://www.terrill.ca/sorting/)
 
-Provide the table ID and initial sort column:
+Provide the table ID and the initially sorted column (optional):
 
 ```
  var sorter = tsorter.create( tableID, initialSortColumn );
@@ -42,7 +42,7 @@ If the `data-tsorter` attribute is omitted it will default to string comparison.
 It is possible to define your own data accessors. This is particularly useful when there is custom HTML inside a table cell. 
 
 ```
- var sorter = tsorter.create('table-id', null, {
+ var sorter = tsorter.create('table-id', 0, {
      'image-number': function(row){  
          return parseFloat( this.getCell(row).childNodes[1].nodeValue, 10 );
      }
