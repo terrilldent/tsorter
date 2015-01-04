@@ -74,7 +74,7 @@ var tsorter = (function()
                     return function(row){
                         return that.getCell(row).firstChild.firstChild.nodeValue;
                     };
-                case "input-text":
+                case "input":
                     return function(row){  
                         return that.getCell(row).firstChild.value;
                     };
