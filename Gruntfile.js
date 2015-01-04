@@ -54,7 +54,6 @@ module.exports = function( grunt )
  
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-jslint');
 
   grunt.registerTask('default', [ 'jslint:tsorter', 'uglify:tsorter', 'concat:tsorter' ] );

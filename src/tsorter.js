@@ -12,10 +12,10 @@ var tsorter = (function()
 
     var sorterPrototype = {
 
-        getCell: function(row,col)
+        getCell: function(row)
         {
             var that = this;
-            return that.trs[row].cells[col];
+            return that.trs[row].cells[that.column];
         },
 
         /* SORT
@@ -27,8 +27,7 @@ var tsorter = (function()
         sort: function( e )
         {   
             var that = this,
-                th = e.target,
-                column = th.cellIndex;
+                th = e.target;
 
             // TODO: make sure target 'th' is not a child element of a <th> 
             //  We can't use currentTarget because of backwards browser support
@@ -36,9 +35,10 @@ var tsorter = (function()
 
 
             // set the data retrieval function for this column 
-            that.get = that.getAccessor( th.abbr, column );
+            that.column = th.cellIndex;
+            that.get = that.getAccessor( th.getAttribute('data-tsorter') );
 
-            if( that.prevSortCol === column )
+            if( that.prevSortCol === that.column )
             {
                 // if already sorted, reverse
                 th.className = th.className !== 'ascend' ? 'ascend' : 'descend';
@@ -53,37 +53,38 @@ var tsorter = (function()
                 }
                 that.quicksort(0, that.trs.length);
             }
-            that.prevSortCol = column;
+            that.prevSortCol = that.column;
         },
         
         /* 
          * Choose Data Accessor Function
          * @param: the html structure type (from the data-type attribute)
          */
-        getAccessor: function(sortType, col)
+        getAccessor: function(sortType)
         {
             var that = this;
+
+            if( that.customAccessors && that.customAccessors[ sortType ] ){
+                return that.customAccessors[ sortType ];
+            }
+
             switch(sortType)
             {   
-                case "image_number":
-                    return function(row){  
-                        return that.getCell(row, col).childNodes[1].nodeValue;
-                    };
                 case "link":
                     return function(row){
-                        return that.getCell(row, col).firstChild.firstChild.nodeValue;
+                        return that.getCell(row).firstChild.firstChild.nodeValue;
                     };
-                case "input_text":
+                case "input-text":
                     return function(row){  
-                        return that.getCell(row, col).firstChild.value;
+                        return that.getCell(row).firstChild.value;
                     };
-                case "number":
+                case "numeric":
                     return function(row){  
-                        return parseInt(that.getCell(row, col).firstChild.nodeValue, 10);
+                        return parseFloat( that.getCell(row).firstChild.nodeValue, 10 );
                     };
-                default:
+                default: /* Plain Text */
                     return function(row){  
-                        return that.getCell(row, col).firstChild.nodeValue;
+                        return that.getCell(row).firstChild.nodeValue;
                     };
             }
         },
@@ -135,13 +136,12 @@ var tsorter = (function()
         quicksort: function(lo, hi)
         {
             var i, j, pivot,
-                that = this,
-                get = that.get;
+                that = this;
 
             if( hi <= lo+1 ){ return; }
              
             if( (hi - lo) === 2 ) {
-                if(get(hi-1) > get(lo)) {
+                if(that.get(hi-1) > that.get(lo)) {
                     that.exchange(hi-1, lo);   
                 }
                 return;
@@ -150,17 +150,17 @@ var tsorter = (function()
             i = lo + 1;
             j = hi - 1;
             
-            if( get(lo) > get( i) ){ that.exchange( i, lo); }
-            if( get( j) > get(lo) ){ that.exchange(lo,  j); }
-            if( get(lo) > get( i) ){ that.exchange( i, lo); }
+            if( that.get(lo) > that.get( i) ){ that.exchange( i, lo); }
+            if( that.get( j) > that.get(lo) ){ that.exchange(lo,  j); }
+            if( that.get(lo) > that.get( i) ){ that.exchange( i, lo); }
             
-            pivot = get(lo);
+            pivot = that.get(lo);
             
             while(true) {
                 j--;
-                while(pivot > get(j)){ j--; }
+                while(pivot > that.get(j)){ j--; }
                 i++;
-                while(get(i) > pivot){ i++; }
+                while(that.get(i) > pivot){ i++; }
                 if(j <= i){ break; }
                 that.exchange(i, j);
             }
@@ -175,7 +175,7 @@ var tsorter = (function()
             }
         },
 
-        init: function( table, initialSortedColumn ){
+        init: function( table, initialSortedColumn, customDataAccessors ){
             var that = this,
                 sort,
                 i;
@@ -189,6 +189,7 @@ var tsorter = (function()
             that.ths = table.getElementsByTagName("th");
             that.trs = table.tBodies[0].getElementsByTagName("tr");
             that.prevSortCol = ( initialSortedColumn && initialSortedColumn > 0 ) ? initialSortedColumn : -1;
+            that.customAccessors = customDataAccessors;
 
             sort = function(e){
                 that.sort(e);
@@ -205,10 +206,10 @@ var tsorter = (function()
 
     // Create a new sorter given a table element
     return {
-        create: function( table )
+        create: function( table, initialSortedColumn, customDataAccessors )
         {
             var sorter = Object.create( sorterPrototype );
-            sorter.init( table );
+            sorter.init( table, initialSortedColumn, customDataAccessors );
             return sorter;
         }
     };

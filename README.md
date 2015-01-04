@@ -1,4 +1,8 @@
 tsorter
 =======
 
-JavaScript Table Sorter
+JavaScript Table Sorter using in-place QuickSort
+
+http://www.terrill.ca/sorting/
+
+
