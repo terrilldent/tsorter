@@ -7,7 +7,13 @@ var tsorter = (function()
 {
     'use strict';
 
+    var sorterPrototype,
+        addEvent,
+        removeEvent,
+        hasEventListener = !!document.addEventListener;
+
     if( !Object.create ){
+        // Define Missing Function
         Object.create = function( prototype ) {
             var Obj = function(){return undefined;};
             Obj.prototype = prototype;
@@ -15,7 +21,25 @@ var tsorter = (function()
         };
     }
 
-    var sorterPrototype = {
+    // Cross Browser event binding
+    addEvent = function( element, eventName, callback ) { 
+        if( hasEventListener ) { 
+            element.addEventListener(eventName, callback, false ); 
+        } else {
+            element.attachEvent( 'on' + eventName, callback); 
+        }
+    };
+
+    // Cross Browser event removal
+    removeEvent = function( element, eventName, callback ) { 
+        if( hasEventListener ) { 
+            element.removeEventListener(eventName, callback, false ); 
+        } else {
+            element.detachEvent( 'on' + eventName, callback); 
+        }
+    };
+
+    sorterPrototype = {
 
         getCell: function(row)
         {
@@ -38,12 +62,11 @@ var tsorter = (function()
             //  We can't use currentTarget because of backwards browser support
             //  IE6,7,8 don't have it.
 
-
             // set the data retrieval function for this column 
             that.column = th.cellIndex;
             that.get = that.getAccessor( th.getAttribute('data-tsorter') );
 
-            if( that.prevSortCol === that.column )
+            if( that.prevCol === that.column )
             {
                 // if already sorted, reverse
                 th.className = th.className !== 'ascend' ? 'ascend' : 'descend';
@@ -53,12 +76,12 @@ var tsorter = (function()
             {
                 // not sorted - call quicksort
                 th.className = 'ascend';
-                if( that.prevSortCol !== -1 && that.ths[that.prevSortCol].className !== 'exc_cell'){
-                    that.ths[that.prevSortCol].className = '';
+                if( that.prevCol !== -1 && that.ths[that.prevCol].className !== 'exc_cell'){
+                    that.ths[that.prevCol].className = '';
                 }
                 that.quicksort(0, that.trs.length);
             }
-            that.prevSortCol = that.column;
+            that.prevCol = that.column;
         },
         
         /* 
@@ -67,19 +90,20 @@ var tsorter = (function()
          */
         getAccessor: function(sortType)
         {
-            var that = this;
+            var that = this,
+                accessors = that.accessors;
 
-            if( that.customAccessors && that.customAccessors[ sortType ] ){
-                return that.customAccessors[ sortType ];
+            if( accessors && accessors[ sortType ] ){
+                return accessors[ sortType ];
             }
 
-            switch(sortType)
+            switch( sortType )
             {   
                 case "link":
                     return function(row){
                         return that.getCell(row).firstChild.firstChild.nodeValue;
                     };
-                case "input-text":
+                case "input":
                     return function(row){  
                         return that.getCell(row).firstChild.value;
                     };
@@ -182,7 +206,6 @@ var tsorter = (function()
 
         init: function( table, initialSortedColumn, customDataAccessors ){
             var that = this,
-                sort,
                 i;
 
             if( typeof table === 'string' ){
@@ -190,23 +213,28 @@ var tsorter = (function()
             }
 
             that.table = table;
+            that.ths   = table.getElementsByTagName("th");
             that.tbody = table.tBodies[0];
-            that.ths = table.getElementsByTagName("th");
-            that.trs = table.tBodies[0].getElementsByTagName("tr");
-            that.prevSortCol = ( initialSortedColumn && initialSortedColumn > 0 ) ? initialSortedColumn : -1;
-            that.customAccessors = customDataAccessors;
-
-            sort = function(e){
-                that.sort(e);
-            };
+            that.trs   = that.tbody.getElementsByTagName("tr");
+            that.prevCol = ( initialSortedColumn && initialSortedColumn > 0 ) ? initialSortedColumn : -1;
+            that.accessors = customDataAccessors;
+            that.boundSort = that.sort.bind( that );
 
             for( i = 0; i < that.ths.length; i++ ) {
-                // TODO: use event listener
-                that.ths[i].onclick = sort;
+                addEvent( that.ths[i], 'click', that.boundSort );
+            }
+        },
+
+        destroy: function(){
+            var that = this,
+                i;
+
+            if( that.ths ){
+                for( i = 0; i < that.ths.length; i++ ) {
+                    removeEvent( that.ths[i], 'click', that.boundSort );
+                }
             }
         }
-
-        // Add a destroy function to unbind click handlers
     };
 
     // Create a new sorter given a table element
