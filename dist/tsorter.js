@@ -109,16 +109,17 @@ var tsorter = (function()
                     };
                 case "numeric":
                     return function(row){  
-                        return parseFloat( that.getCell(row).firstChild.nodeValue, 10 );
+                        return parseFloat( that.getCell(row).firstChild.nodeValue.replace(/\D/g,''), 10 );
                     };
                 default: /* Plain Text */
                     return function(row){  
-                        return that.getCell(row).firstChild.nodeValue;
+                        return that.getCell(row).firstChild.nodeValue.toLowerCase();
                     };
             }
         },
 
-        /* Exchange
+        /* 
+         * Exchange
          * A complicated way of exchanging two rows in a table.
          * Exchanges rows at index i and j
          */
