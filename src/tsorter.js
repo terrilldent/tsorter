@@ -64,13 +64,13 @@ var tsorter = (function()
             if( that.prevCol === that.column )
             {
                 // if already sorted, reverse
-                th.className = th.className !== 'ascend' ? 'ascend' : 'descend';
+                th.className = th.className !== 'descend' ? 'descend' : 'ascend';
                 that.reverseTable();
             }
             else
             {
                 // not sorted - call quicksort
-                th.className = 'ascend';
+                th.className = 'descend';
                 if( that.prevCol !== -1 && that.ths[that.prevCol].className !== 'exc_cell'){
                     that.ths[that.prevCol].className = '';
                 }
