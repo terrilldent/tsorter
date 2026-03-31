@@ -1,22 +1,37 @@
-#tsorter
-
+# tsorter
 
 JavaScript Table Sorter using in-place QuickSort.
 
-Full Details: 
+Full Details:
 [http://www.terrill.ca/sorting/](http://www.terrill.ca/sorting/)
+
+## Bun-based workflow
+
+This repo now uses [Bun](https://bun.sh/) for dependency management, building, and local development.
+
+```bash
+bun install
+bun run build
+bun run dev
+```
+
+- `bun run build` generates:
+  - `dist/tsorter.js` (banner + readable source)
+  - `dist/tsorter.min.js` (banner + minified output)
+- `bun run dev` starts a local static server at `http://localhost:3000` by default.
+- Set `PORT` to override the dev server port.
 
 Provide the table ID and the initially sorted column (optional):
 
 ```
- var sorter = tsorter.create( tableID, initialSortColumn );
+var sorter = tsorter.create(tableID, initialSortColumn);
 ```
 
-##Specifying Data Types
+## Specifying Data Types
 
-Different data types require different comparisons. Numbers in particular must be compared as numbers and not strings. To aid the script we can hint at the data type by specifying a `data-tsorter` attribute on the table header cell for each column. 
+Different data types require different comparisons. Numbers in particular must be compared as numbers and not strings. To aid the script we can hint at the data type by specifying a `data-tsorter` attribute on the table header cell for each column.
 
-````
+```
 <thead>
     <tr>
          <th data-tsorter="numeric">Year</th>
@@ -24,28 +39,28 @@ Different data types require different comparisons. Numbers in particular must b
          <th>Country</th>
     </tr>
 </thead>
-````
+```
 
-If the `data-tsorter` attribute is omitted it will default to string comparison. 
+If the `data-tsorter` attribute is omitted it will default to string comparison.
 
-##Built in Data Types
+## Built in Data Types
 
-| type | description  |
+| type | description |
 |-----|---|
-|  numeric  | Treats the table cell value as an integer or float  |
+| numeric | Treats the table cell value as an integer or float |
 | link | Parses the text content of a link tag inside the table cell |
 | input | Parses an input tag's value inside the table cell |
 | default | by default the textContent of the table cell is used and compared as text |
 
-##Custom Data Accessor
+## Custom Data Accessor
 
-It is possible to define your own data accessors. This is particularly useful when there is custom HTML inside a table cell. 
+It is possible to define your own data accessors. This is particularly useful when there is custom HTML inside a table cell.
 
 ```
- var sorter = tsorter.create('table-id', 0, {
-     'image-number': function(row){  
-         return parseFloat( this.getCell(row).childNodes[1].nodeValue, 10 );
-     }
+var sorter = tsorter.create('table-id', 0, {
+    'image-number': function(row){
+        return parseFloat(this.getCell(row).childNodes[1].nodeValue, 10);
+    }
 });
 ```
 
