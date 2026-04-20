@@ -164,13 +164,6 @@ var tsorter = (function()
                 that = this;
 
             if( hi <= lo+1 ){ return; }
-             
-            if( (hi - lo) === 2 ) {
-                if(that.get(hi-1) > that.get(lo)) {
-                    that.exchange(hi-1, lo);   
-                }
-                return;
-            }
             
             i = lo + 1;
             j = hi - 1;
