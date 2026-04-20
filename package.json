@@ -2,16 +2,18 @@
   "name": "tsorter",
   "version": "2.0.0",
   "description": "JavaScript HTML Table Sorter",
-  "main": "Gruntfile.js",
+  "type": "module",
+  "main": "dist/tsorter.js",
+  "packageManager": "bun@1.2.16",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "bun run scripts/build.mjs",
+    "build:watch": "bun run --watch scripts/build.mjs",
+    "dev": "bun run scripts/dev-server.mjs",
+    "check": "bun run build"
   },
   "author": "Terrill Dent",
   "license": "Released under MIT license, http://terrill.ca/sorting/tsorter/LICENSE",
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-uglify": "~0.7.0",
-    "grunt-jslint": "~1.1.1"
+    "uglify-js": "^3.19.3"
   }
 }
