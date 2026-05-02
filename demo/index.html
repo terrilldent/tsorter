@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>Tsorter demo</title>
+        <meta charset="UTF-8"> 
+        <script src="../src/tsorter.js"></script>
+    </head>
+
+    <style>
+        th { border: solid; border-width: 1px; }
+    </style>
+<body>
+
+<table id="silly_table">
+    <thead>
+        <tr>
+            <th colspan=2>Letter</th>
+            <th data-tsorter="numeric">Number</th>
+        </tr>
+    </th>
+
+    <tbody>
+    <tr>
+        <td>A</td>
+        <td>Aa</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>B</td>
+        <td>Bb</td>
+        <td>3</td>
+    </tr>
+
+    <tr>
+        <td>C</td>
+        <td>Cc</td>
+        <td>2</td>
+     </tr>
+     <tr>
+        <td>D</td>
+        <td>Dd</td>
+        <td>4</td>
+    </tr>
+      <tr>
+        <td>E</td>
+        <td>Ee</td>
+        <td>6</td>
+    </tr>
+       <tr>
+        <td>F</td>
+        <td>Ff</td>
+        <td>1</td>
+    </tr>
+   </tbody>
+</table>
+
+<script>
+function init() {
+    var sorter2 = tsorter.create('silly_table');
+}
+    
+window.onload = init;
+</script>
+
+</body>
+</html>
