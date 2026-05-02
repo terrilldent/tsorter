@@ -209,7 +209,7 @@ var tsorter = (function()
             }
 
             that.table = table;
-            that.ths   = table.getElementsByTagName("th");
+            that.ths   = table.tHead.getElementsByTagName("th");
             that.tbody = table.tBodies[0];
             that.trs   = that.tbody.getElementsByTagName("tr");
             that.prevCol = ( initialSortedColumn && initialSortedColumn > 0 ) ? initialSortedColumn : -1;
